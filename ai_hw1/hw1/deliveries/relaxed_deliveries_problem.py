@@ -98,6 +98,27 @@ class RelaxedDeliveriesProblem(GraphProblem):
         Notice that this is an *Iterator*. Hence it should be implemented using the `yield` keyword.
         For each successor, a pair of the successor state and the operator cost is yielded.
         """
+
+        """
+                self.current_location: Junction = current_location
+        self.dropped_so_far: FrozenSet[Junction] = frozenset(dropped_so_far)
+        self.fuel: float = fuel
+        """
+
+        # rel_state = RelaxedDeliveriesState(state_to_expand)
+        for stop in self.possible_stop_points:
+            print("current location", state_to_expand.current_location)
+            dist = stop.calc_air_distance_from(state_to_expand.current_location)
+            if state_to_expand.fuel > dist:
+                if stop in self.gas_stations:
+                    next_state = RelaxedDeliveriesState(stop, state_to_expand.dropped_so_Far, self.gas_tank_capacity)
+                    yield [next_state, dist]
+                elif stop not in state_to_expand.dropped_so_far:
+                    new_dropped_so_far = state_to_expand.dropped_so_Far.copy
+                    new_dropped_so_far.add(stop)
+                    next_state = RelaxedDeliveriesState(stop, new_dropped_so_far, self.gas_tank_capacity - dist)
+                    yield [next_state, dist]
+
         assert isinstance(state_to_expand, RelaxedDeliveriesState)
 
         raise NotImplemented()  # TODO: remove!
