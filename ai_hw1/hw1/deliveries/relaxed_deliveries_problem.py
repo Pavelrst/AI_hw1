@@ -39,7 +39,13 @@ class RelaxedDeliveriesState(GraphProblemState):
         TODO: implement this method!
         Notice: Never compare floats using `==` operator! Use `fuel_as_int` instead of `fuel`.
         """
-        raise NotImplemented()  # TODO: remove!
+        if self.current_location != other.current_location:
+            return False
+        if self.fuel_as_int != other.fuel_as_int:
+            return False
+        if self.dropped_so_far == other.dropped_so_far:
+            return False
+        return True
 
     def __hash__(self):
         """
@@ -48,12 +54,13 @@ class RelaxedDeliveriesState(GraphProblemState):
 
         TODO: implement this method!
         A common implementation might be something in the format of:
-        >>> return hash((self.some_field1, self.some_field2, self.some_field3))
+
         Notice: Do NOT give float fields to `hash(...)`.
                 Otherwise the upper requirement would not met.
                 In our case, use `fuel_as_int`.
         """
-        raise NotImplemented()  # TODO: remove!
+        return hash((self.current_location, self.fuel_as_int, self.dropped_so_far))
+
 
     def __str__(self):
         """
