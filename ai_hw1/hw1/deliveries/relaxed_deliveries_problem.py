@@ -43,7 +43,7 @@ class RelaxedDeliveriesState(GraphProblemState):
             return False
         if self.fuel_as_int != other.fuel_as_int:
             return False
-        if self.dropped_so_far == other.dropped_so_far:
+        if self.dropped_so_far != other.dropped_so_far:
             return False
         return True
 
@@ -60,7 +60,6 @@ class RelaxedDeliveriesState(GraphProblemState):
                 In our case, use `fuel_as_int`.
         """
         return hash((self.current_location, self.fuel_as_int, self.dropped_so_far))
-
 
     def __str__(self):
         """
@@ -104,24 +103,19 @@ class RelaxedDeliveriesProblem(GraphProblem):
         self.dropped_so_far: FrozenSet[Junction] = frozenset(dropped_so_far)
         self.fuel: float = fuel
         """
-
-        # rel_state = RelaxedDeliveriesState(state_to_expand)
+        assert isinstance(state_to_expand, RelaxedDeliveriesState)
         for stop in self.possible_stop_points:
-            print("current location", state_to_expand.current_location)
             dist = stop.calc_air_distance_from(state_to_expand.current_location)
             if state_to_expand.fuel > dist:
                 if stop in self.gas_stations:
-                    next_state = RelaxedDeliveriesState(stop, state_to_expand.dropped_so_Far, self.gas_tank_capacity)
+                    next_state = RelaxedDeliveriesState(stop, state_to_expand.dropped_so_far, self.gas_tank_capacity)
                     yield [next_state, dist]
                 elif stop not in state_to_expand.dropped_so_far:
-                    new_dropped_so_far = state_to_expand.dropped_so_Far.copy
+                    new_dropped_so_far = set(e for e in state_to_expand.dropped_so_far)
                     new_dropped_so_far.add(stop)
-                    next_state = RelaxedDeliveriesState(stop, new_dropped_so_far, self.gas_tank_capacity - dist)
+                    assert len(new_dropped_so_far) == len(state_to_expand.dropped_so_far) + 1
+                    next_state = RelaxedDeliveriesState(stop, new_dropped_so_far, state_to_expand.fuel - dist)
                     yield [next_state, dist]
-
-        assert isinstance(state_to_expand, RelaxedDeliveriesState)
-
-        raise NotImplemented()  # TODO: remove!
 
     def is_goal(self, state: GraphProblemState) -> bool:
         """
@@ -129,8 +123,9 @@ class RelaxedDeliveriesProblem(GraphProblem):
         TODO: implement this method!
         """
         assert isinstance(state, RelaxedDeliveriesState)
-
-        raise NotImplemented()  # TODO: remove!
+        if len(state.dropped_so_far) == len(self.drop_points):
+            return True
+        return False
 
     def solution_additional_str(self, result: 'SearchResult') -> str:
         """This method is used to enhance the printing method of a found solution."""

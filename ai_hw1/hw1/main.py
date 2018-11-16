@@ -78,7 +78,7 @@ def run_astar_for_weights_in_range(heuristic_type: HeuristicFunctionType, proble
         costs.append(res.final_search_node.cost)
         expanded.append(res.nr_expanded_states)
 
-    return  weights, costs, expanded
+    return weights, costs, expanded
 
 
 
@@ -138,7 +138,9 @@ def relaxed_deliveries_problem():
     # Ex.16
     # TODO: create an instance of `AStar` with the `MaxAirDistHeuristic`,
     #       solve the `big_deliveries_prob` with it and print the results (as before).
-    exit()  # TODO: remove!
+    my_astar_max_air = AStar(MaxAirDistHeuristic)
+    res = my_astar_max_air.solve_problem(big_deliveries_prob)
+    print(res)
 
     # Ex.17
     # TODO: create an instance of `AStar` with the `MSTAirDistHeuristic`,
