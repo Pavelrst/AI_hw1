@@ -103,23 +103,13 @@ def map_problem():
 
 
     # Ex.11
-    # TODO: create an instance of `AStar` with the `AirDistHeuristic`,
-    #       solve the same `map_prob` with it and print the results (as before).
     my_astar_air = AStar(AirDistHeuristic)
     res = my_astar_air.solve_problem(map_prob)
     print(res)
 
     # Ex.12
-    # TODO:
-    # 1. Complete the implementation of the function
-    #    `run_astar_for_weights_in_range()` (upper in this file).
-    # 2. Complete the implementation of the function
-    #    `plot_distance_and_expanded_by_weight_figure()`
-    #    (upper in this file).
-    # 3. Call here the function `run_astar_for_weights_in_range()`
-    #    with `AirDistHeuristic` and `map_prob`.
-    weights,dists,exps = run_astar_for_weights_in_range(AirDistHeuristic,map_prob)
-    plot_distance_and_expanded_wrt_weight_figure(weights,dists,exps)
+    weights, dists, exps = run_astar_for_weights_in_range(AirDistHeuristic, map_prob)
+    plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
 
 
 
@@ -141,8 +131,6 @@ def relaxed_deliveries_problem():
     print(res)
 
     # Ex.17
-    # TODO: create an instance of `AStar` with the `MSTAirDistHeuristic`,
-    #       solve the `big_deliveries_prob` with it and print the results (as before).
     my_astar_mst = AStar(MSTAirDistHeuristic)
     res = my_astar_mst.solve_problem(big_deliveries_prob)
     print(res)
@@ -150,7 +138,8 @@ def relaxed_deliveries_problem():
     # Ex.18
     # TODO: Call here the function `run_astar_for_weights_in_range()`
     #       with `MSTAirDistHeuristic` and `big_deliveries_prob`.
-    exit()  # TODO: remove!
+    weights, dists, exps = run_astar_for_weights_in_range(MSTAirDistHeuristic, big_deliveries_prob)
+    plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
 
     # Ex.24
     # TODO:
