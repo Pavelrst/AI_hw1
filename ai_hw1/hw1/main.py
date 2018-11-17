@@ -70,7 +70,7 @@ def run_astar_for_weights_in_range(heuristic_type: HeuristicFunctionType, proble
     results = list()
     costs = list()
     expanded = list()
-    weights = np.linspace(0.5,1,20)
+    weights = np.linspace(0.5, 1, 20)
     for weight in weights:
         my_astar = AStar(heuristic_type,weight)
         res = my_astar.solve_problem(problem)
@@ -136,8 +136,6 @@ def relaxed_deliveries_problem():
     print(res)
 
     # Ex.18
-    # TODO: Call here the function `run_astar_for_weights_in_range()`
-    #       with `MSTAirDistHeuristic` and `big_deliveries_prob`.
     weights, dists, exps = run_astar_for_weights_in_range(MSTAirDistHeuristic, big_deliveries_prob)
     plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
 

@@ -3,13 +3,30 @@ from matplotlib import pyplot as plt
 
 X = np.array([400, 450, 900, 390, 550])
 
-# TODO: Write the code as explained in the instructions
-raise NotImplemented()  # TODO: remove!
+# Our code below
+alpha = min(X)
+T = np.linspace(0.01, 5, 100)
+P = np.zeros((len(T), len(X)))
 
+
+def calc_denominator(alpha, t) -> float:
+    assert alpha > 0 and t > 0
+    ret = 0.0
+    for x_h in X:
+        ret += (x_h/alpha)**(-1/t)
+    return ret
+
+
+# calculate all probabilities
+for i, t in enumerate(T):
+    for j, x in enumerate(X):
+        P[i, j] = ((x/alpha) ** (-1 / t)) / calc_denominator(alpha, t)
+
+# our code above
 print(P)
 
-for i in range(len(X)):
-    plt.plot(T, P[:, i], label=str(X[i]))
+for j in range(len(X)):
+    plt.plot(T, P[:, j], label=str(X[j]))
 
 plt.xlabel("T")
 plt.ylabel("P")
