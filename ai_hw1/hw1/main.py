@@ -67,9 +67,9 @@ def run_astar_for_weights_in_range(heuristic_type: HeuristicFunctionType, proble
     #    the #expanded.
     # Call the function `plot_distance_and_expanded_by_weight_figure()`
     #  with that data.
-    results = list()
-    costs = list()
-    expanded = list()
+    results = []
+    costs = []
+    expanded = []
     weights = np.linspace(0.5, 1, 20)
     for weight in weights:
         my_astar = AStar(heuristic_type,weight)
