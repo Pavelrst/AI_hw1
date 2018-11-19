@@ -21,22 +21,23 @@ class GreedyStochastic(BestFirstSearch):
         self.heuristic_function = self.heuristic_function_type(problem)
 
     def _open_successor_node(self, problem: GraphProblem, successor_node: SearchNode):
-        # Uri - copied from uniform_cost.py
-        if self.close.has_state(successor_node.state):
-            return
-
-        if self.open.has_state(successor_node.state):
-            already_found_node_with_same_state = self.open.get_node_by_state(successor_node.state)
-            if already_found_node_with_same_state.expanding_priority > successor_node.expanding_priority:
-                self.open.extract_node(already_found_node_with_same_state)
-
-        if not self.open.has_state(successor_node.state):
+        # Uri - copied from astar.py
+        if not self.open.is_empty() and self.open.has_state(successor_node.state):
+            old_node = self.open.get_node_by_state(successor_node.state)
+            if successor_node.expanding_priority < old_node.expanding_priority:
+                self.open.extract_node(old_node)
+                self.open.push_node(successor_node)
+        elif self.close.has_state(successor_node.state):
+                old_node = self.close.get_node_by_state(successor_node.state)
+                if successor_node.expanding_priority < old_node.expanding_priority:
+                    self.close.remove_node(old_node)
+                    self.open.push_node(successor_node)
+        else:
             self.open.push_node(successor_node)
 
     def _calc_node_expanding_priority(self, search_node: SearchNode) -> float:
         # Uri - copied from uniform_cost.py
-        assert(search_node.cost is not None)
-        return search_node.cost
+        return self.heuristic_function.estimate(search_node.state)
 
     def _extract_next_search_node_to_expand(self) -> Optional[SearchNode]:
 
@@ -76,7 +77,6 @@ class GreedyStochastic(BestFirstSearch):
                 if cont.cost == 0:
                     zero_idx.append(i)
             rnd_idx = np.random.choice(len(zero_idx), 1)[0]
-            print ("DEBUG: rnd_idx =", rnd_idx)
             chosen_idx = zero_idx[rnd_idx]
 
             for i, cont in enumerate(contenders):
@@ -92,17 +92,15 @@ class GreedyStochastic(BestFirstSearch):
         for cont in contenders:
             denom += (cont.cost / alpha) ** (-1 / self.T)
 
+        assert denom > 0
+
         for i, node in enumerate(contenders):
             cost = node.cost
             P[i] = ((cost/alpha) ** (-1 / self.T)) / denom
 
-        print("DEBUG: P=", P)
-
-        chosen_idx = np.random.choice(self.N, 1, P)
-        print("DEBUG: chosen index is:", chosen_idx)
+        chosen_idx = np.random.choice(self.N, 1, False, P)[0]
 
         for i, cont in enumerate(contenders):
             if i != chosen_idx:
                 self.open.push_node(cont)
-
         return contenders[chosen_idx]
