@@ -38,8 +38,6 @@ class GreedyStochastic(BestFirstSearch):
         assert(search_node.cost is not None)
         return search_node.cost
 
-        raise NotImplemented()  # TODO: remove!
-
     def _extract_next_search_node_to_expand(self) -> Optional[SearchNode]:
 
         """
@@ -66,19 +64,45 @@ class GreedyStochastic(BestFirstSearch):
 
         P = np.zeros(self.N)
 
-        from operator import attrgetter
-        alpha = min(contenders, key=attrgetter('cost'))
-        print ("DEBUG: alpha = ", alpha)
+        alpha = contenders[0].cost
+        for con in contenders:
+            if con.cost < alpha:
+                alpha = con.cost
 
-        from experiments.temperature import calc_denominator
-        denominator = calc_denominator(alpha, self.T)
+        if alpha == 0:
+            # choose a node with cost 0 at random
+            zero_idx = []
+            for i, cont in enumerate(contenders):
+                if cont.cost == 0:
+                    zero_idx.append(i)
+            rnd_idx = np.random.choice(len(zero_idx), 1)[0]
+            print ("DEBUG: rnd_idx =", rnd_idx)
+            chosen_idx = zero_idx[rnd_idx]
+
+            for i, cont in enumerate(contenders):
+                if i != chosen_idx:
+                    self.open.push_node(cont)
+
+            return contenders[chosen_idx]
+
+        # Calculating denominator
+
+        assert alpha > 0 and self.T > 0
+        denom = 0.0
+        for cont in contenders:
+            denom += (cont.cost / alpha) ** (-1 / self.T)
+
         for i, node in enumerate(contenders):
             cost = node.cost
-            P[i] = ((cost/alpha) ** (-1 / self.T)) / denominator
+            P[i] = ((cost/alpha) ** (-1 / self.T)) / denom
 
-        print ("DEBUG: P=", P)
+        print("DEBUG: P=", P)
 
         chosen_idx = np.random.choice(self.N, 1, P)
         print("DEBUG: chosen index is:", chosen_idx)
+
+        for i, cont in enumerate(contenders):
+            if i != chosen_idx:
+                self.open.push_node(cont)
 
         return contenders[chosen_idx]
