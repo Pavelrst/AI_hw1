@@ -1,13 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-X = np.array([400, 450, 900, 390, 550])
-
-# Our code below
-alpha = min(X)
-T = np.linspace(0.01, 5, 100)
-P = np.zeros((len(T), len(X)))
-
 
 def calc_denominator(alpha, t) -> float:
     assert alpha > 0 and t > 0
@@ -16,6 +9,13 @@ def calc_denominator(alpha, t) -> float:
         ret += (x_h/alpha)**(-1/t)
     return ret
 
+
+X = np.array([400, 450, 900, 390, 550])
+
+# Our code below
+alpha = min(X)
+T = np.linspace(0.01, 5, 100)
+P = np.zeros((len(T), len(X)))
 
 # calculate all probabilities
 for i, t in enumerate(T):

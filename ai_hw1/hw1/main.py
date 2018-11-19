@@ -140,6 +140,7 @@ def relaxed_deliveries_problem():
     plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
 
     # Ex.24
+    print(">>>>>>>>>>>>>>Running ex 24!")
     # TODO:
     # 1. Run the stochastic greedy algorithm for 100 times.
     #    For each run, store the cost of the found solution.
@@ -159,7 +160,11 @@ def relaxed_deliveries_problem():
     #    (x-axis). Of course that the costs of A*, and deterministic
     #    greedy are not dependent with the iteration number, so
     #    these two should be represented by horizontal lines.
-    exit()  # TODO: remove!
+    RUNS = 1
+
+    my_stochastic = GreedyStochastic(MSTAirDistHeuristic)
+    res = my_stochastic.solve_problem(big_deliveries_prob)
+    print(res)
 
 
 def strict_deliveries_problem():

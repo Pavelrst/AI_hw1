@@ -21,21 +21,27 @@ class GreedyStochastic(BestFirstSearch):
         self.heuristic_function = self.heuristic_function_type(problem)
 
     def _open_successor_node(self, problem: GraphProblem, successor_node: SearchNode):
-        """
-        TODO: implement this method!
-        """
+        # Uri - copied from uniform_cost.py
+        if self.close.has_state(successor_node.state):
+            return
 
-        raise NotImplemented()  # TODO: remove!
+        if self.open.has_state(successor_node.state):
+            already_found_node_with_same_state = self.open.get_node_by_state(successor_node.state)
+            if already_found_node_with_same_state.expanding_priority > successor_node.expanding_priority:
+                self.open.extract_node(already_found_node_with_same_state)
+
+        if not self.open.has_state(successor_node.state):
+            self.open.push_node(successor_node)
 
     def _calc_node_expanding_priority(self, search_node: SearchNode) -> float:
-        """
-        TODO: implement this method!
-        Remember: `GreedyStochastic` is greedy.
-        """
+        # Uri - copied from uniform_cost.py
+        assert(search_node.cost is not None)
+        return search_node.cost
 
         raise NotImplemented()  # TODO: remove!
 
     def _extract_next_search_node_to_expand(self) -> Optional[SearchNode]:
+
         """
         Extracts the next node to expand from the open queue,
          using the stochastic method to choose out of the N
@@ -51,4 +57,28 @@ class GreedyStochastic(BestFirstSearch):
                 pushed again into that queue.
         """
 
-        raise NotImplemented()  # TODO: remove!
+        if self.open.is_empty():
+            return None
+        num_contenders = min(self.N, len(self.open))
+        contenders = []
+        for i in range(0, num_contenders):
+            contenders.append(self.open.pop_next_node())
+
+        P = np.zeros(self.N)
+
+        from operator import attrgetter
+        alpha = min(contenders, key=attrgetter('cost'))
+        print ("DEBUG: alpha = ", alpha)
+
+        from experiments.temperature import calc_denominator
+        denominator = calc_denominator(alpha, self.T)
+        for i, node in enumerate(contenders):
+            cost = node.cost
+            P[i] = ((cost/alpha) ** (-1 / self.T)) / denominator
+
+        print ("DEBUG: P=", P)
+
+        chosen_idx = np.random.choice(self.N, 1, P)
+        print("DEBUG: chosen index is:", chosen_idx)
+
+        return contenders[chosen_idx]
