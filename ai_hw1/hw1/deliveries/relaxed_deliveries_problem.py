@@ -35,9 +35,6 @@ class RelaxedDeliveriesState(GraphProblemState):
     def __eq__(self, other):
         """
         This method is used to determine whether two given state objects represents the same state.
-
-        TODO: implement this method!
-        Notice: Never compare floats using `==` operator! Use `fuel_as_int` instead of `fuel`.
         """
         if self.current_location != other.current_location:
             return False
@@ -51,13 +48,6 @@ class RelaxedDeliveriesState(GraphProblemState):
         """
         This method is used to create a hash of a state.
         It is critical that two objects representing the same state would have the same hash!
-
-        TODO: implement this method!
-        A common implementation might be something in the format of:
-
-        Notice: Do NOT give float fields to `hash(...)`.
-                Otherwise the upper requirement would not met.
-                In our case, use `fuel_as_int`.
         """
         return hash((self.current_location, self.fuel_as_int, self.dropped_so_far))
 
@@ -89,19 +79,12 @@ class RelaxedDeliveriesProblem(GraphProblem):
 
     def expand_state_with_costs(self, state_to_expand: GraphProblemState) -> Iterator[Tuple[GraphProblemState, float]]:
         """
-        TODO: implement this method!
         This method represents the `Succ: S -> P(S)` function of the relaxed deliveries problem.
         The `Succ` function is defined by the problem operators as shown in class.
         The relaxed problem operators are defined in the assignment instructions.
         It receives a state and iterates over the successor states.
         Notice that this is an *Iterator*. Hence it should be implemented using the `yield` keyword.
         For each successor, a pair of the successor state and the operator cost is yielded.
-        """
-
-        """
-                self.current_location: Junction = current_location
-        self.dropped_so_far: FrozenSet[Junction] = frozenset(dropped_so_far)
-        self.fuel: float = fuel
         """
         assert isinstance(state_to_expand, RelaxedDeliveriesState)
         for stop in self.possible_stop_points:
@@ -120,7 +103,6 @@ class RelaxedDeliveriesProblem(GraphProblem):
     def is_goal(self, state: GraphProblemState) -> bool:
         """
         This method receives a state and returns whether this state is a goal.
-        TODO: implement this method!
         """
         assert isinstance(state, RelaxedDeliveriesState)
         if len(state.dropped_so_far) == len(self.drop_points):

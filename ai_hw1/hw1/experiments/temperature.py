@@ -12,7 +12,6 @@ def calc_denominator(alpha, t) -> float:
 
 X = np.array([400, 450, 900, 390, 550])
 
-# Our code below
 alpha = min(X)
 T = np.linspace(0.01, 5, 100)
 P = np.zeros((len(T), len(X)))
@@ -21,9 +20,6 @@ P = np.zeros((len(T), len(X)))
 for i, t in enumerate(T):
     for j, x in enumerate(X):
         P[i, j] = ((x/alpha) ** (-1 / t)) / calc_denominator(alpha, t)
-
-# our code above
-print(P)
 
 for j in range(len(X)):
     plt.plot(T, P[:, j], label=str(X[j]))

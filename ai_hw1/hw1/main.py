@@ -28,15 +28,7 @@ def plot_distance_and_expanded_wrt_weight_figure(
 
     fig, ax1 = plt.subplots()
 
-    # TODO: Plot the total distances with ax1. Use `ax1.plot(...)`.
-    # TODO: Make this curve colored blue with solid line style.
-    # See documentation here:
-    # https://matplotlib.org/2.0.0/api/_as_gen/matplotlib.axes.Axes.plot.html
-    # You can also search google for additional examples.
     ax1.plot(weights, total_distance)
-
-
-    # ax1: Make the y-axis label, ticks and tick labels match the line color.
     ax1.set_ylabel('distance traveled', color='b')
     ax1.tick_params('y', colors='b')
     ax1.set_xlabel('weight')
@@ -68,7 +60,6 @@ def run_astar_for_weights_in_range(heuristic_type: HeuristicFunctionType, proble
         num_expanded.append(res.nr_expanded_states)
 
     return weights, costs, num_expanded
-
 
 
 def map_problem():
@@ -186,10 +177,9 @@ def strict_deliveries_problem():
 
 
 def main():
-    #map_problem()
+    map_problem()
     relaxed_deliveries_problem()
-    #strict_deliveries_problem()
-    # TODO - remove upper #
+    strict_deliveries_problem()
 
 
 if __name__ == '__main__':
