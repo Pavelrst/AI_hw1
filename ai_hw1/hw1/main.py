@@ -215,9 +215,12 @@ def strict_deliveries_problem():
     # Ex.28
     # TODO: create an instance of `AStar` with the `RelaxedDeliveriesHeuristic`,
     #       solve the `small_deliveries_strict_problem` with it and print the results (as before).
-    my_astar_mst = AStar(RelaxedDeliveriesHeuristic)
-    res = my_astar_mst.solve_problem(small_deliveries_strict_problem)
-    print(res)
+    weights, dists, exps = run_astar_for_weights_in_range(RelaxedDeliveriesHeuristic, small_deliveries_strict_problem)
+    plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
+
+    #my_astar_mst = AStar(RelaxedDeliveriesHeuristic)
+    #res = my_astar_mst.solve_problem(small_deliveries_strict_problem)
+    #print(res)
 
 
 def main():
