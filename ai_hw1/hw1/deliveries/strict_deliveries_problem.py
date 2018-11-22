@@ -71,21 +71,18 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
         # Uri - copied from relaxed_deliveries_prolem.py
         assert isinstance(state_to_expand, RelaxedDeliveriesState)
 
-        small_delivery = DeliveriesProblemInput.load_from_file('small_delivery.in', self.roads)
-
-
         for stop in self.possible_stop_points:
             # Uri - modification; try to read from cache
-            dist = self._get_from_cache((state_to_expand, stop))
+            dist = self._get_from_cache((state_to_expand.current_location.index, stop.index))
             if dist is None:
-                #inner_astar = AStar(AirDistHeuristic)
-                #res = inner_astar.solve_problem(self.roads)
-                #dist = res.final_search_node.cost
 
-                res = self.inner_problem_solver.solve_problem()
+                map_prob = MapProblem(self.roads, state_to_expand.current_location.index,
+                                      stop.index)
+                res = self.inner_problem_solver.solve_problem(map_prob)
                 dist = res.final_search_node.cost
-                self._insert_to_cache((state_to_expand, stop), dist)
+                self._insert_to_cache((state_to_expand.current_location.index, stop.index), dist)
             # ^ end of Uri modification
+
             if state_to_expand.fuel > dist:
                 if stop in self.gas_stations:
                     next_state = RelaxedDeliveriesState(stop, state_to_expand.dropped_so_far, self.gas_tank_capacity)
