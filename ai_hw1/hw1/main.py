@@ -212,8 +212,11 @@ def strict_deliveries_problem():
     # Ex.26
     # TODO: Call here the function `run_astar_for_weights_in_range()`
     #       with `MSTAirDistHeuristic` and `big_deliveries_prob`.
-    big_delivery = DeliveriesProblemInput.load_from_file('big_delivery.in', roads)
-    big_deliveries_prob = RelaxedDeliveriesProblem(big_delivery)
+
+    inner_astar = AStar(AirDistHeuristic)
+    big_delivery = DeliveriesProblemInput.load_from_file('small_delivery.in', roads)
+    big_deliveries_prob = StrictDeliveriesProblem(big_delivery, roads, inner_astar)
+
     weights, dists, exps = run_astar_for_weights_in_range(MSTAirDistHeuristic, big_deliveries_prob)
     plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
     exit()  # TODO: remove!

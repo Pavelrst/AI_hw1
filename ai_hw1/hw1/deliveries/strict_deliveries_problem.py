@@ -76,8 +76,10 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
             # Uri - modification; try to read from cache
             dist = self._get_from_cache((state_to_expand, stop))
             if dist is None:
-                inner_astar = AStar(AirDistHeuristic)
-                res = inner_astar.solve_problem(self.roads)
+                #inner_astar = AStar(AirDistHeuristic)
+                #res = inner_astar.solve_problem(self.roads)
+                #dist = res.final_search_node.cost
+                res = self.inner_problem_solver.solve_problem(self.roads)
                 dist = res.final_search_node.cost
                 self._insert_to_cache((state_to_expand, stop), dist)
             # ^ end of Uri modification
