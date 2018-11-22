@@ -73,7 +73,6 @@ def run_astar_for_weights_in_range(heuristic_type: HeuristicFunctionType, proble
     weights = np.linspace(0.5, 1, 20)
     for weight in weights:
         my_astar = AStar(heuristic_type, weight)
-        #print("DEBUG: type of problem is: ", type(problem))
         res = my_astar.solve_problem(problem)
         results.append(res)
         costs.append(res.final_search_node.cost)
@@ -213,9 +212,7 @@ def strict_deliveries_problem():
     # TODO: Call here the function `run_astar_for_weights_in_range()`
     #       with `MSTAirDistHeuristic` and `small_deliveries_strict_problem`.
 
-    print("DEBUG: type of small_deliveries strict problem ", type(small_deliveries_strict_problem))
     weights, dists, exps = run_astar_for_weights_in_range(MSTAirDistHeuristic, small_deliveries_strict_problem)
-    print("DEBUG: run_astar_for_weights_in_range")
     plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
     exit()  # TODO: remove!
 

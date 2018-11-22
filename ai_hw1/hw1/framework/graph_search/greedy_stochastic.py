@@ -22,6 +22,8 @@ class GreedyStochastic(BestFirstSearch):
 
     def _open_successor_node(self, problem: GraphProblem, successor_node: SearchNode):
         # Uri - copied from astar.py
+
+        #should be greedy
         if not self.open.is_empty() and self.open.has_state(successor_node.state):
             old_node = self.open.get_node_by_state(successor_node.state)
             if successor_node.expanding_priority < old_node.expanding_priority:

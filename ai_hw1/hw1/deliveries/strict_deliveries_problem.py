@@ -82,17 +82,16 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
 
             if state_to_expand.fuel > dist:
                 if stop in self.gas_stations:
-                    next_state = RelaxedDeliveriesState(stop, state_to_expand.dropped_so_far, self.gas_tank_capacity)
+                    next_state = StrictDeliveriesState(stop, state_to_expand.dropped_so_far, self.gas_tank_capacity)
                     yield [next_state, dist]
                 else:   # A dropping point we have not visited yet
                     new_dropped_so_far = set(e for e in state_to_expand.dropped_so_far)
                     new_dropped_so_far.add(stop)
                     assert len(new_dropped_so_far) == len(state_to_expand.dropped_so_far) + 1
-                    next_state = RelaxedDeliveriesState(stop, new_dropped_so_far, state_to_expand.fuel - dist)
+                    next_state = StrictDeliveriesState(stop, new_dropped_so_far, state_to_expand.fuel - dist)
                     yield [next_state, dist]
 
     def is_goal(self, state: GraphProblemState) -> bool:
-        print(type(state))
         assert isinstance(state, StrictDeliveriesState)
         if len(state.dropped_so_far) == len(self.drop_points):
             return True
