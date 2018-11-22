@@ -71,7 +71,9 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
         # Uri - copied from relaxed_deliveries_prolem.py
         assert isinstance(state_to_expand, RelaxedDeliveriesState)
 
-        from deliveries.map_heuristics import AirDistHeuristic
+        small_delivery = DeliveriesProblemInput.load_from_file('small_delivery.in', self.roads)
+
+
         for stop in self.possible_stop_points:
             # Uri - modification; try to read from cache
             dist = self._get_from_cache((state_to_expand, stop))
@@ -79,7 +81,8 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
                 #inner_astar = AStar(AirDistHeuristic)
                 #res = inner_astar.solve_problem(self.roads)
                 #dist = res.final_search_node.cost
-                res = self.inner_problem_solver.solve_problem(self.roads)
+
+                res = self.inner_problem_solver.solve_problem()
                 dist = res.final_search_node.cost
                 self._insert_to_cache((state_to_expand, stop), dist)
             # ^ end of Uri modification
