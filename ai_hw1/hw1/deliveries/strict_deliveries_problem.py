@@ -70,12 +70,17 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
 
         # Uri - copied from relaxed_deliveries_prolem.py
         assert isinstance(state_to_expand, RelaxedDeliveriesState)
+
+        from deliveries.map_heuristics import AirDistHeuristic
         for stop in self.possible_stop_points:
             # Uri - modification; try to read from cache
-            dist = self._get_from_cache(stop)
-
-
-            dist = stop.calc_air_distance_from(state_to_expand.current_location)
+            dist = self._get_from_cache((state_to_expand, stop))
+            if dist is None:
+                inner_astar = AStar(AirDistHeuristic)
+                res = inner_astar.solve_problem(self.roads)
+                dist = res.final_search_node.cost
+                self._insert_to_cache((state_to_expand, stop), dist)
+            # ^ end of Uri modification
             if state_to_expand.fuel > dist:
                 if stop in self.gas_stations:
                     next_state = RelaxedDeliveriesState(stop, state_to_expand.dropped_so_far, self.gas_tank_capacity)
@@ -87,13 +92,7 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
                     next_state = RelaxedDeliveriesState(stop, new_dropped_so_far, state_to_expand.fuel - dist)
                     yield [next_state, dist]
 
-        raise NotImplemented()  # TODO: remove!
-
     def is_goal(self, state: GraphProblemState) -> bool:
-        """
-        This method receives a state and returns whether this state is a goal.
-        TODO: implement this method!
-        """
         assert isinstance(state, StrictDeliveriesState)
 
         if len(state.dropped_so_far) == len(self.drop_points):
