@@ -54,15 +54,6 @@ class AStar(BestFirstSearch):
         This method is responsible for adding this just-created successor
          node into the `self.open` priority queue, and may check the existence
          of another node representing the same state in `self.close`.
-
-        TODO: implement this method.
-        Have a look at the implementation of `BestFirstSearch` to have better understanding.
-        Use `self.open` (SearchNodesPriorityQueue) and `self.close` (SearchNodesCollection) data structures.
-        These data structures are implemented in `graph_search/best_first_search.py`.
-        Note: The successor_node's f-score has been already calculated and stored
-              under `successor_node.expanding_priority`.
-        Remember: In A*, in contrast to uniform-cost, a successor state might have an already closed node,
-                  but still could be improved.
         """
 
         if not self.open.is_empty() and self.open.has_state(successor_node.state):

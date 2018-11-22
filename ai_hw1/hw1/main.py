@@ -56,29 +56,18 @@ def plot_distance_and_expanded_wrt_weight_figure(
 
 
 def run_astar_for_weights_in_range(heuristic_type: HeuristicFunctionType, problem: GraphProblem):
-    # TODO:
-    # 1. Create an array of 20 numbers equally spreaded in [0.5, 1]
-    #    (including the edges). You can use `np.linspace()` for that.
-    # 2. For each weight in that array run the A* algorithm, with the
-    #    given `heuristic_type` over the map problem. For each such run,
-    #    store the cost of the solution (res.final_search_node.cost)
-    #    and the number of expanded states (res.nr_expanded_states).
-    #    Store these in 2 lists (array for the costs and array for
-    #    the #expanded.
-    # Call the function `plot_distance_and_expanded_by_weight_figure()`
-    #  with that data.
     results = []
     costs = []
-    expanded = []
+    num_expanded = []
     weights = np.linspace(0.5, 1, 20)
     for weight in weights:
         my_astar = AStar(heuristic_type, weight)
         res = my_astar.solve_problem(problem)
         results.append(res)
         costs.append(res.final_search_node.cost)
-        expanded.append(res.nr_expanded_states)
+        num_expanded.append(res.nr_expanded_states)
 
-    return weights, costs, expanded
+    return weights, costs, num_expanded
 
 
 
@@ -93,23 +82,19 @@ def map_problem():
     print(res)
 
     # Ex.10
-    # TODO: create an instance of `AStar` with the `NullHeuristic`,
-    #       solve the same `map_prob` with it and print the results (as before).
-    # Notice: AStar constructor receives the heuristic *type* (ex: `MyHeuristicClass`),
-    #         and not an instance of the heuristic (eg: not `MyHeuristicClass()`).
-    my_astar = AStar(NullHeuristic)
-    res = my_astar.solve_problem(map_prob)
+    null_astar = AStar(NullHeuristic)
+    res = null_astar.solve_problem(map_prob)
     print(res)
 
 
     # Ex.11
-    my_astar_air = AStar(AirDistHeuristic)
-    res = my_astar_air.solve_problem(map_prob)
+    air_dist_astar = AStar(AirDistHeuristic)
+    res = air_dist_astar.solve_problem(map_prob)
     print(res)
 
     # Ex.12
-    weights, dists, exps = run_astar_for_weights_in_range(AirDistHeuristic, map_prob)
-    plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
+    weights, dists, nums_expanded = run_astar_for_weights_in_range(AirDistHeuristic, map_prob)
+    plot_distance_and_expanded_wrt_weight_figure(weights, dists, nums_expanded)
 
 
 
@@ -126,34 +111,23 @@ def relaxed_deliveries_problem():
     big_deliveries_prob = RelaxedDeliveriesProblem(big_delivery)
 
     # Ex.16
-    my_astar_max_air = AStar(MaxAirDistHeuristic)
-    res = my_astar_max_air.solve_problem(big_deliveries_prob)
+    max_air_astar = AStar(MaxAirDistHeuristic)
+    res = max_air_astar.solve_problem(big_deliveries_prob)
     print(res)
 
     # Ex.17
-    my_astar_mst = AStar(MSTAirDistHeuristic)
-    res = my_astar_mst.solve_problem(big_deliveries_prob)
+    mst_astar = AStar(MSTAirDistHeuristic)
+    res = mst_astar.solve_problem(big_deliveries_prob)
     print(res)
 
     # Ex.18
-    weights, dists, exps = run_astar_for_weights_in_range(MSTAirDistHeuristic, big_deliveries_prob)
-    plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
+    weights, dists, nums_expanded = run_astar_for_weights_in_range(MSTAirDistHeuristic, big_deliveries_prob)
+    plot_distance_and_expanded_wrt_weight_figure(weights, dists, nums_expanded)
     # for next Ex.:
     w05_res = dists[0]
     w1_res = dists[19]
 
     # Ex.24
-    # TODO:
-    # 1. Run the stochastic greedy algorithm for 100 times.
-    #    For each run, store the cost of the found solution.
-    #    Store these costs in a list.
-    # 2. The "Anytime Greedy Stochastic Algorithm" runs the greedy
-    #     #    greedy stochastic for N times, and after each iteration
-    #     #    stores the best solution found so far. It means that after
-    #     #    iteration #i, the cost of the solution found by the anytime
-    #     #    algorithm is the MINIMUM among the costs of the solutions
-    #     #    found in iterations {1,...,i}. Calculate the costs of the
-    #     #    anytime algorithm wrt the #iteration and store them in a list.
     num_of_runs = 100
     costs_list = []
     iters_list = []
@@ -161,8 +135,6 @@ def relaxed_deliveries_problem():
     for iter in range(num_of_runs):
         my_stochastic = GreedyStochastic(MSTAirDistHeuristic)
         res = my_stochastic.solve_problem(big_deliveries_prob)
-        #print(res)
-        # copied from run_astar_for_weights_in_range
         curr_cost = res.final_search_node.cost
         iters_list.append(iter)
         if curr_cost < min_cost:
@@ -174,27 +146,23 @@ def relaxed_deliveries_problem():
     print("iters list:", iters_list)
 
     fig, ax1 = plt.subplots()
-    ax1.plot(iters_list, costs_list, 'b',label='Greedy Stochastic')
+    ax1.plot(iters_list, costs_list, 'b', label='Greedy Stochastic')
     ax1.set_ylabel('cost', color='b')
     ax1.tick_params('y', colors='b')
     ax1.set_xlabel('iteration')
 
-
-
-    # 3. Calculate and store the cost of the solution received by
-    #    the A* algorithm (with w=0.5).
+    # Calculate and store the cost of the solution received by the A* algorithm (with w=0.5).
     w05_costs_vec = np.full(num_of_runs, w05_res)
 
-    # 4. Calculate and store the cost of the solution received by
-    #    the deterministic greedy algorithm (A* with w=1).
+    # Calculate and store the cost of the solution received by the deterministic greedy algorithm (A* with w=1).
     w1_costs_vec = np.full(num_of_runs, w1_res)
 
-    # 5. Plot a figure with the costs (y-axis) wrt the #iteration
+    # Plot a figure with the costs (y-axis) wrt the #iteration
     #    (x-axis). Of course that the costs of A*, and deterministic
     #    greedy are not dependent with the iteration number, so
     #    these two should be represented by horizontal lines.
-    ax1.plot(iters_list, w05_costs_vec, 'r',label='A* w=0.5')
-    ax1.plot(iters_list, w1_costs_vec, 'g',label='A* w=1')
+    ax1.plot(iters_list, w05_costs_vec, 'r', label='A* w=0.5')
+    ax1.plot(iters_list, w1_costs_vec, 'g', label='A* w=1')
     plt.legend()
     fig.tight_layout()
     plt.show()
@@ -209,25 +177,19 @@ def strict_deliveries_problem():
         small_delivery, roads, inner_problem_solver=AStar(AirDistHeuristic))
 
     # Ex.26
-    weights, dists, exps = run_astar_for_weights_in_range(MSTAirDistHeuristic, small_deliveries_strict_problem)
-    plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
+    weights, dists, nums_expanded = run_astar_for_weights_in_range(MSTAirDistHeuristic, small_deliveries_strict_problem)
+    plot_distance_and_expanded_wrt_weight_figure(weights, dists, nums_expanded)
 
     # Ex.28
-    # TODO: create an instance of `AStar` with the `RelaxedDeliveriesHeuristic`,
-    #       solve the `small_deliveries_strict_problem` with it and print the results (as before).
-    weights, dists, exps = run_astar_for_weights_in_range(RelaxedDeliveriesHeuristic, small_deliveries_strict_problem)
-    plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
-
-    #my_astar_mst = AStar(RelaxedDeliveriesHeuristic)
-    #res = my_astar_mst.solve_problem(small_deliveries_strict_problem)
-    #print(res)
+    weights, dists, nums_expanded = run_astar_for_weights_in_range(RelaxedDeliveriesHeuristic, small_deliveries_strict_problem)
+    plot_distance_and_expanded_wrt_weight_figure(weights, dists, nums_expanded)
 
 
 def main():
     #map_problem()
-    #TODO - remove upper #
-    #relaxed_deliveries_problem()
-    strict_deliveries_problem()
+    relaxed_deliveries_problem()
+    #strict_deliveries_problem()
+    # TODO - remove upper #
 
 
 if __name__ == '__main__':

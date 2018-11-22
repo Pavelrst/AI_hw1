@@ -21,8 +21,6 @@ class GreedyStochastic(BestFirstSearch):
         self.heuristic_function = self.heuristic_function_type(problem)
 
     def _open_successor_node(self, problem: GraphProblem, successor_node: SearchNode):
-        # Uri - copied from astar.py
-
         #should be greedy
         if not self.open.is_empty() and self.open.has_state(successor_node.state):
             old_node = self.open.get_node_by_state(successor_node.state)
@@ -38,7 +36,6 @@ class GreedyStochastic(BestFirstSearch):
             self.open.push_node(successor_node)
 
     def _calc_node_expanding_priority(self, search_node: SearchNode) -> float:
-        # Uri - copied from uniform_cost.py
         return self.heuristic_function.estimate(search_node.state)
 
     def _extract_next_search_node_to_expand(self) -> Optional[SearchNode]:
@@ -47,15 +44,6 @@ class GreedyStochastic(BestFirstSearch):
         Extracts the next node to expand from the open queue,
          using the stochastic method to choose out of the N
          best items from open.
-        TODO: implement this method!
-        Use `np.random.choice(...)` whenever you need to randomly choose
-         an item from an array of items given a probabilities array `p`.
-        You can read the documentation of `np.random.choice(...)` and
-         see usage examples by searching it in Google.
-        Notice: You might want to pop min(N, len(open) items from the
-                `open` priority queue, and then choose an item out
-                of these popped items. The other items have to be
-                pushed again into that queue.
         """
 
         if self.open.is_empty():

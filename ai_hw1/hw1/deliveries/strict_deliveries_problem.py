@@ -13,10 +13,6 @@ class StrictDeliveriesState(RelaxedDeliveriesState):
      deliveries problem.
     This state is basically similar to the state of the relaxed
      problem. Hence, this class inherits from `RelaxedDeliveriesState`.
-
-    TODO:
-        If you believe you need to modify the state for the strict
-         problem in some sense, please go ahead and do so.
     """
     pass
 
@@ -58,7 +54,6 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
 
     def expand_state_with_costs(self, state_to_expand: GraphProblemState) -> Iterator[Tuple[GraphProblemState, float]]:
         """
-        TODO: implement this method!
         This method represents the `Succ: S -> P(S)` function of the strict deliveries problem.
         The `Succ` function is defined by the problem operators as shown in class.
         The relaxed problem operators are defined in the assignment instructions.
