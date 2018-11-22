@@ -73,14 +73,19 @@ class RelaxedDeliveriesHeuristic(HeuristicFunction):
     heuristic_name = 'RelaxedProb'
 
     def estimate(self, state: GraphProblemState) -> float:
-        """
-        Solve the appropriate relaxed problem in order to
-         evaluate the distance to the goal.
-        TODO: implement this method!
-        """
-
         assert isinstance(self.problem, StrictDeliveriesProblem)
         assert isinstance(state, StrictDeliveriesState)
 
-        raise NotImplemented()  # TODO: remove!
+        prob_def = DeliveriesProblemInput("inner astar distance",
+                                          state.current_location,
+                                          self.problem.drop_points.difference(state.dropped_so_far),
+                                          self.problem.gas_stations,
+                                          self.problem.gas_tank_capacity,
+                                          state.fuel)
+        da_prob = RelaxedDeliveriesProblem(prob_def)
+        my_astar_mst = AStar(MSTAirDistHeuristic)
+        res = my_astar_mst.solve_problem(da_prob)
+        if res.final_search_node is None:   # Problem has no solution
+            return np.inf
+        return res.final_search_node.cost
 

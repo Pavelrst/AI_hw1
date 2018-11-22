@@ -69,7 +69,6 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
         assert isinstance(state_to_expand, StrictDeliveriesState)
 
         for stop in self.possible_stop_points.difference(state_to_expand.dropped_so_far):
-            # Uri - modification; try to read from cache
             dist = self._get_from_cache((state_to_expand.current_location.index, stop.index))
             if dist is None:
 
@@ -78,7 +77,6 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
                 res = self.inner_problem_solver.solve_problem(map_prob)
                 dist = res.final_search_node.cost
                 self._insert_to_cache((state_to_expand.current_location.index, stop.index), dist)
-            # ^ end of Uri modification
 
             if state_to_expand.fuel > dist:
                 if stop in self.gas_stations:

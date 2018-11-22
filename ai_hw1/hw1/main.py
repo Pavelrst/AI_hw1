@@ -209,17 +209,15 @@ def strict_deliveries_problem():
         small_delivery, roads, inner_problem_solver=AStar(AirDistHeuristic))
 
     # Ex.26
-    # TODO: Call here the function `run_astar_for_weights_in_range()`
-    #       with `MSTAirDistHeuristic` and `small_deliveries_strict_problem`.
-
     weights, dists, exps = run_astar_for_weights_in_range(MSTAirDistHeuristic, small_deliveries_strict_problem)
     plot_distance_and_expanded_wrt_weight_figure(weights, dists, exps)
-    exit()  # TODO: remove!
 
     # Ex.28
     # TODO: create an instance of `AStar` with the `RelaxedDeliveriesHeuristic`,
     #       solve the `small_deliveries_strict_problem` with it and print the results (as before).
-    exit()  # TODO: remove!
+    my_astar_mst = AStar(RelaxedDeliveriesHeuristic)
+    res = my_astar_mst.solve_problem(small_deliveries_strict_problem)
+    print(res)
 
 
 def main():
