@@ -63,18 +63,18 @@ class GreedyStochastic(BestFirstSearch):
         for i in range(0, num_contenders):
             contenders.append(self.open.pop_next_node())
 
-        P = np.zeros(self.N)
+        P = np.zeros(num_contenders)
 
-        alpha = contenders[0].cost
+        alpha = contenders[0].expanding_priority
         for con in contenders:
-            if con.cost < alpha:
-                alpha = con.cost
+            if con.expanding_priority < alpha:
+                alpha = con.expanding_priority
 
         if alpha == 0:
             # choose a node with cost 0 at random
             zero_idx = []
             for i, cont in enumerate(contenders):
-                if cont.cost == 0:
+                if cont.expanding_priority == 0:
                     zero_idx.append(i)
             rnd_idx = np.random.choice(len(zero_idx), 1)[0]
             chosen_idx = zero_idx[rnd_idx]
@@ -90,15 +90,15 @@ class GreedyStochastic(BestFirstSearch):
         assert alpha > 0 and self.T > 0
         denom = 0.0
         for cont in contenders:
-            denom += (cont.cost / alpha) ** (-1 / self.T)
+            denom += (cont.expanding_priority / alpha) ** (-1 / self.T)
 
         assert denom > 0
 
         for i, node in enumerate(contenders):
-            cost = node.cost
+            cost = node.expanding_priority
             P[i] = ((cost/alpha) ** (-1 / self.T)) / denom
 
-        chosen_idx = np.random.choice(self.N, 1, False, P)[0]
+        chosen_idx = np.random.choice(num_contenders, 1, False, P)[0]
 
         for i, cont in enumerate(contenders):
             if i != chosen_idx:

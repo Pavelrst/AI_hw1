@@ -68,10 +68,7 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
         """
         assert isinstance(state_to_expand, StrictDeliveriesState)
 
-        # Uri - copied from relaxed_deliveries_prolem.py
-        assert isinstance(state_to_expand, RelaxedDeliveriesState)
-
-        for stop in self.possible_stop_points:
+        for stop in self.possible_stop_points.difference(state_to_expand.dropped_so_far):
             # Uri - modification; try to read from cache
             dist = self._get_from_cache((state_to_expand.current_location.index, stop.index))
             if dist is None:
@@ -87,7 +84,7 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
                 if stop in self.gas_stations:
                     next_state = RelaxedDeliveriesState(stop, state_to_expand.dropped_so_far, self.gas_tank_capacity)
                     yield [next_state, dist]
-                elif stop not in state_to_expand.dropped_so_far:
+                else:   # A dropping point we have not visited yet
                     new_dropped_so_far = set(e for e in state_to_expand.dropped_so_far)
                     new_dropped_so_far.add(stop)
                     assert len(new_dropped_so_far) == len(state_to_expand.dropped_so_far) + 1
@@ -95,8 +92,8 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
                     yield [next_state, dist]
 
     def is_goal(self, state: GraphProblemState) -> bool:
+        print(type(state))
         assert isinstance(state, StrictDeliveriesState)
-
         if len(state.dropped_so_far) == len(self.drop_points):
             return True
         return False
