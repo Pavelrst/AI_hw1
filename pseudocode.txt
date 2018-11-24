@@ -1,0 +1,39 @@
+def h1(State s):
+	if ApplicableH(s) is True:
+		return h0(s)
+	if is_goal(s):
+		return 0
+	else
+		ret = -1
+		for succsessor in s.succsessors_list:
+			if ApplicableH(succsessor) is False:
+				return 0
+			else:
+				succsessor_cost = h(successor)
+				if succsessor_cost < ret or ret == -1:
+					ret = succsessor_cost
+		if ret == -1:
+			return infinity
+		return ret
+		
+def h2(State s):
+	if ApplicableH(s) is True:
+		return h0(s)
+	if is_goal(s):
+		return 0
+	else
+		ret = -1
+		for succsessor in s.succsessors_list:
+			if successor in s.closed or successor == s:
+				continue
+			if ApplicableH(succsessor) is False:
+				return 0
+			else:
+				succsessor_cost = h(successor)
+				if succsessor_cost < ret or ret == -1:
+					ret = succsessor_cost
+		if ret == -1:
+			return infinity
+		return ret
+		
+		
