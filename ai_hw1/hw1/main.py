@@ -121,6 +121,7 @@ def relaxed_deliveries_problem():
     # Ex.24
     num_of_runs = 100
     costs_list = []
+    greedy_costs_list = []
     iters_list = []
     min_cost = np.inf
     for iter in range(num_of_runs):
@@ -128,16 +129,17 @@ def relaxed_deliveries_problem():
         res = my_stochastic.solve_problem(big_deliveries_prob)
         curr_cost = res.final_search_node.cost
         iters_list.append(iter)
+        greedy_costs_list.append(curr_cost)
         if curr_cost < min_cost:
             costs_list.append(curr_cost)
             min_cost = curr_cost
         else:
             costs_list.append(min_cost)
-    print("costs list:", costs_list)
-    print("iters list:", iters_list)
+    #print("costs list:", costs_list)
+    #print("iters list:", iters_list)
 
     fig, ax1 = plt.subplots()
-    ax1.plot(iters_list, costs_list, 'b', label='Greedy Stochastic')
+    ax1.plot(iters_list, costs_list, 'b', label='Anytime')
     ax1.set_ylabel('cost', color='b')
     ax1.tick_params('y', colors='b')
     ax1.set_xlabel('iteration')
@@ -154,6 +156,7 @@ def relaxed_deliveries_problem():
     #    these two should be represented by horizontal lines.
     ax1.plot(iters_list, w05_costs_vec, 'r', label='A* w=0.5')
     ax1.plot(iters_list, w1_costs_vec, 'g', label='A* w=1')
+    ax1.plot(iters_list, greedy_costs_list, 'm', label='Greedy Stochastic')
     plt.legend()
     fig.tight_layout()
     plt.show()
