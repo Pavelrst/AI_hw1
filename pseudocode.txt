@@ -1,39 +1,29 @@
-def h1(State s):
+def h1(State s, State prev, float prev_hueristic_value):
 	if ApplicableH(s) is True:
 		return h0(s)
 	if is_goal(s):
 		return 0
-	else
-		ret = -1
-		for succsessor in s.succsessors_list:
-			if ApplicableH(succsessor) is False:
-				return 0
-			else:
-				succsessor_cost = h(successor)
-				if succsessor_cost < ret or ret == -1:
-					ret = succsessor_cost
-		if ret == -1:
-			return infinity
-		return ret
+	if prev is None:
+		return 0
+	inherited_cost = max(prev_hueristic_value - cost(prev, s), 0)
+	return inherited_cost
 		
-def h2(State s):
+def h2(State s, State prev):
 	if ApplicableH(s) is True:
 		return h0(s)
 	if is_goal(s):
 		return 0
-	else
-		ret = -1
-		for succsessor in s.succsessors_list:
-			if successor in s.closed or successor == s:
-				continue
-			if ApplicableH(succsessor) is False:
-				return 0
-			else:
-				succsessor_cost = h(successor)
-				if succsessor_cost < ret or ret == -1:
-					ret = succsessor_cost
-		if ret == -1:
-			return infinity
-		return ret
+	if prev is None:
+		return 0
+	inherited_cost = max(prev_hueristic_value - cost(prev, s), 0)
+	old_cost = cache.load_cost(s)
+	if old_cost is not None:
+		if old_cost < inherited_cost:
+			cache.store_cost(s, inherited_cost)
+			return inherited_cost
+		else:
+			return old_cost
+	cache.store_cost(s, inherited_cost)
+	return inherited_cost
 		
 		
