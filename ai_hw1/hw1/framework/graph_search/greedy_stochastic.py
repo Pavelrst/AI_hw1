@@ -71,6 +71,7 @@ class GreedyStochastic(BestFirstSearch):
                 if i != chosen_idx:
                     self.open.push_node(cont)
 
+            self.T = self.T * self.T_scale_factor
             return contenders[chosen_idx]
 
         # Calculating denominator
@@ -91,4 +92,6 @@ class GreedyStochastic(BestFirstSearch):
         for i, cont in enumerate(contenders):
             if i != chosen_idx:
                 self.open.push_node(cont)
+
+        self.T = self.T * self.T_scale_factor
         return contenders[chosen_idx]
