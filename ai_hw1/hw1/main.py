@@ -178,6 +178,14 @@ def strict_deliveries_problem():
     weights, dists, nums_expanded = run_astar_for_weights_in_range(RelaxedDeliveriesHeuristic, small_deliveries_strict_problem)
     plot_distance_and_expanded_wrt_weight_figure(weights, dists, nums_expanded)
 
+    mst_astar = AStar(MSTAirDistHeuristic)
+    res = mst_astar.solve_problem(small_deliveries_strict_problem)
+    print(res)
+
+    rdp_astar = AStar(RelaxedDeliveriesHeuristic)
+    res = rdp_astar.solve_problem(small_deliveries_strict_problem)
+    print(res)
+
 
 def main():
     map_problem()
